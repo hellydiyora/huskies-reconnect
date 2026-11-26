@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { api, type Icebreaker, type Match } from "@/lib/api";
 import { Avatar } from "@/components/Avatar";
 
@@ -63,6 +63,21 @@ export function MatchCard({ courseId, match: m }: { courseId: string; match: Mat
 
   const typed = useTypedText(draft.kind === "ok" ? draft.message : null);
   const message = edited ?? typed.text;
+
+  // Grow the intro box to fit its text, so nothing is cut off on a phone.
+  // (CSS `field-sizing: content` isn't supported in every mobile browser yet.)
+  const box = useRef<HTMLTextAreaElement>(null);
+  useLayoutEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight + 2}px`; // + top/bottom border
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [message, draft.kind]);
 
   async function draftIntro() {
     setDraft({ kind: "loading" });
@@ -158,27 +173,28 @@ export function MatchCard({ courseId, match: m }: { courseId: string; match: Mat
           <label className="flex flex-col gap-2 text-sm font-semibold">
             Your intro to {firstName}
             <textarea
-              rows={5}
+              ref={box}
+              rows={3}
               value={message}
               readOnly={typed.typing && edited === null}
               onChange={(e) => {
                 setEdited(e.target.value);
                 setCopied(false);
               }}
-              className="resize-y rounded-lg border border-field bg-white px-3.5 py-3 text-[15px] font-normal leading-relaxed text-ink"
+              className="resize-none overflow-hidden rounded-lg border border-field bg-white px-3.5 py-3 text-[15px] font-normal leading-relaxed text-ink"
             />
           </label>
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => copy(message)}
               disabled={typed.typing && edited === null}
-              className="rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-lg bg-ink px-4 text-sm font-semibold text-white disabled:opacity-50"
             >
               {copied ? "Copied" : "Copy"}
             </button>
             <button
               onClick={draftIntro}
-              className="rounded-lg border border-field bg-white px-4 py-2.5 text-sm font-semibold"
+              className="inline-flex min-h-11 items-center rounded-lg border border-field bg-white px-4 text-sm font-semibold"
             >
               Regenerate
             </button>
@@ -196,13 +212,23 @@ export function MatchCard({ courseId, match: m }: { courseId: string; match: Mat
       {draft.kind === "blocked" && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-cream p-4 text-sm text-[#3f3a36]">
           <span>We couldn&apos;t draft an intro that passed our safety check.</span>
-          <button onClick={draftIntro} className="font-semibold text-husky-deep underline">Try again</button>
+          <button
+            onClick={draftIntro}
+            className="inline-flex min-h-11 items-center rounded-lg border border-field bg-white px-4 font-semibold text-ink"
+          >
+            Try again
+          </button>
         </div>
       )}
       {draft.kind === "error" && (
         <div role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border border-[#ead9a6] bg-[#fdf6e3] p-4 text-sm text-[#4a3c0b]">
           <span>{draft.message}</span>
-          <button onClick={draftIntro} className="font-semibold underline">Retry</button>
+          <button
+            onClick={draftIntro}
+            className="inline-flex min-h-11 items-center rounded-lg border border-[#ead9a6] bg-white px-4 font-semibold"
+          >
+            Retry
+          </button>
         </div>
       )}
     </li>
