@@ -31,7 +31,12 @@ function useTypedText(full: string | null): { text: string; typing: boolean } {
   const [shown, setShown] = useState(0);
 
   useEffect(() => {
-    if (full === null) return;
+    // Reset while there's no draft (e.g. during Regenerate), so the next draft
+    // doesn't flash in at the previous draft's length.
+    if (full === null) {
+      setShown(0);
+      return;
+    }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setShown(full.length);
