@@ -191,7 +191,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => { setStep("email"); setCode(""); setError(null); }}
-              className="text-sm font-semibold text-husky-deep underline"
+              className="inline-flex min-h-11 items-center px-3 text-sm font-semibold text-husky-deep underline"
             >
               Use a different email
             </button>
