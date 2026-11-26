@@ -71,7 +71,7 @@ export default function CourseMatchesPage() {
         <button
           disabled={adminBusy}
           onClick={() => changeSemester("reset")}
-          className="rounded-lg bg-white px-3.5 py-2.5 font-semibold text-ink disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-lg bg-white px-3.5 font-semibold text-ink disabled:opacity-50"
         >
           Undo semester end
         </button>
@@ -79,7 +79,7 @@ export default function CourseMatchesPage() {
         <button
           disabled={adminBusy}
           onClick={() => changeSemester("end")}
-          className="rounded-lg bg-ink px-3.5 py-2.5 font-semibold text-white disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-lg bg-ink px-3.5 font-semibold text-white disabled:opacity-50"
         >
           Simulate semester end
         </button>
@@ -92,7 +92,7 @@ export default function CourseMatchesPage() {
       {alumni ? (
         <section className="bg-ink text-white">
           <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pb-11 pt-7 sm:px-6">
-            <Link href="/courses" className="text-sm font-medium text-[#d6d1cc] hover:text-white">← All courses</Link>
+            <Link href="/courses" className="inline-flex min-h-11 items-center self-start text-sm font-medium text-[#d6d1cc] hover:text-white">← All courses</Link>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div className="flex flex-wrap items-center gap-5">
                 <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl bg-husky">
@@ -120,7 +120,7 @@ export default function CourseMatchesPage() {
         </section>
       ) : (
         <header className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pt-8 sm:px-6">
-          <Link href="/courses" className="self-start text-sm font-medium text-husky-deep hover:underline">← All courses</Link>
+          <Link href="/courses" className="inline-flex min-h-11 items-center self-start text-sm font-medium text-husky-deep hover:underline">← All courses</Link>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="flex flex-col gap-2.5">
               {course && (
