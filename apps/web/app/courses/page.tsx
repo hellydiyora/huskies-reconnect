@@ -106,7 +106,7 @@ export default function CoursesPage() {
                 <button
                   onClick={() => join(c.id)}
                   disabled={joining !== null}
-                  className="rounded-lg border border-field bg-white px-4 py-2.5 text-sm font-semibold hover:border-ink disabled:opacity-50"
+                  className="inline-flex min-h-11 items-center rounded-lg border border-field bg-white px-4 text-sm font-semibold hover:border-ink disabled:opacity-50"
                 >
                   {joining === c.id ? "Joining…" : "Join"}
                 </button>
